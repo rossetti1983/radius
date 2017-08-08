@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+<meta content="en-us" http-equiv="Content-Language" />
+<script type="text/javascript" src="md5.v1.js"></script>
+<script type="text/javascript">
+function digestMD5(hex){
+    var value = faultylabs.MD5(hex);
+    return value;
+}
+
+function toHex(str) {
+	var hex = '';
+	for(var i=0;i<str.length;i++) {
+		hex += ''+str.charCodeAt(i).toString(16);
+	}
+	return hex;
+}
+
+function genAccessResAuth(){
+var a = document.getElementById("accessResRadius");
+var b = document.getElementById("accessResReqAuth");
+var c = document.getElementById("shareSecret");
+var d = document.getElementById("accessRespAuth");
+
+var p1 = a.value.substr(0, 8);
+var p3 = a.value.substr(40);
+var total = p1 + b.value + p3 + toHex(c.value);
+var bytes = hexToBytes(total);
+d.value = (digestMD5(bytes));
+
+
+}
+
+function genAcctResAuth(){
+var a = document.getElementById("acctResRadius");
+var b = document.getElementById("acctResReqAuth");
+var c = document.getElementById("shareSecret1");
+var d = document.getElementById("acctRespAuth");
+
+var p1 = a.value.substr(0, 8);
+var p3 = a.value.substr(40);
+var total = p1 + b.value + p3 + toHex(c.value);
+var bytes = hexToBytes(total);
+d.value = (digestMD5(bytes));
+
+
+}
+
+function genAcctReqAuth(){
+var a = document.getElementById("acctReqRadius");
+var c = document.getElementById("shareSecret2");
+var d = document.getElementById("acctReqAuth");
+
+var p1 = a.value.substr(0, 8);
+var p3 = a.value.substr(40);
+var total = p1 + "00000000000000000000000000000000" + p3 + toHex(c.value);
+var bytes = hexToBytes(total);
+d.value = (digestMD5(bytes));
+
+
+}
+
+
+// Convert a hex string to a byte array
+function hexToBytes(hex) {
+    for (var bytes = [], c = 0; c < hex.length; c += 2)
+    bytes.push(parseInt(hex.substr(c, 2), 16));
+    return bytes;
+}
+
+// Convert a byte array to a hex string
+function bytesToHex(bytes) {
+    for (var hex = [], i = 0; i < bytes.length; i++) {
+        hex.push((bytes[i] >>> 4).toString(16));
+        hex.push((bytes[i] & 0xF).toString(16));
+    }
+    return hex.join("");
+}</script>
+
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>Radius Authenticator Generator</title>
+</head>
+
+<body>
+<center>
+<font size="6" color="black">Radius Authenticator Generator</font><table style="width: 80%">
+	<tr>
+		<td colspan="2">
+		Access-Request Authenticator (No need to generate)</td>
+	</tr>
+	<tr>
+		<td style="width: 100%">
+		Baesed on fc2865: In Access-Request Packets, the Authenticator value is a 16
+         octet random number</td>
+	
+	</tr>
+	</table><hr>
+	<table style="width: 80%">
+		
+		<tr>
+	<tr>
+		<td colspan="2">
+		Access-Response Authenticator</td>
+	</tr>
+	<tr>
+		<td style="width: 435px">
+		Radius Message in Hex</td>
+		<td style="width: 148px">
+		<input id="accessResRadius" name="Text1" type="text" style="width: 541px"/></td>
+	</tr>
+	<tr>
+		<td style="width: 435px">Access-Request Authenticator in Hex</td>
+		<td style="width: 148px">
+		<input id="accessResReqAuth" name="Text2" type="text" style="width: 300px"/></td>
+	</tr>
+	<tr>
+		<td style="width: 435px">Share Secret</td>
+		<td style="width: 148px">
+		<input id="shareSecret" name="Text3" type="text" style="width: 300px"/></td>
+	</tr>
+	<tr>
+		<td style="width: 435px;">
+		<form method="post">
+			<input name="Generate" type="button" value="Generate" onclick="genAccessResAuth();" /></form>
+		</td>
+		<td style="width: 148px;" >
+		<form method="post">
+			<input id="accessRespAuth" name="Text4" style="width: 300px" type="text" disabled="disabled" /></form>
+		</td>
+	</tr>
+</table>
+	<hr>
+<table style="width: 80%">
+	<tr>
+		<td colspan="2">
+		Account-Request Authenticator</td>
+	</tr>
+	<tr>
+		<td style="width: 433px">
+		Radius Message in Hex</td>
+		<td style="width: 148px">
+		<input id="acctReqRadius" name="Text5" type="text" style="width: 541px"/></td>
+	</tr>
+	<tr>
+		<td style="width: 433px">Share Secret</td>
+		<td style="width: 148px">
+		<input id="shareSecret2" name="Text7" type="text" style="width: 300px"/></td>
+	</tr>
+	<tr>
+		<td style="width: 433px;">
+		<form method="post">
+			<input name="Generate2" type="button" value="Generate" onclick="genAcctReqAuth();" /></form>
+		</td>
+		<td style="width: 148px;" >
+		<form method="post">
+			<input id="acctReqAuth" name="Text8" style="width: 300px" type="text" disabled="disabled" /></form>
+		</td>
+	</tr>
+</table>
+<hr>
+<table style="width: 80%">
+	<tr>
+		<td colspan="2">
+		Account-Response Authenticator</td>
+	</tr>
+	<tr>
+		<td style="width: 435px">
+		Radius Message in Hex</td>
+		<td style="width: 148px">
+		<input id="acctResRadius" name="Text9" type="text" style="width: 541px"/></td>
+	</tr>
+	<tr>
+		<td style="width: 435px">Access-Request Authenticator in Hex</td>
+		<td style="width: 148px">
+		<input id="acctResReqAuth" name="Text10" type="text" style="width: 300px"/></td>
+	</tr>
+	<tr>
+		<td style="width: 435px">Share Secret</td>
+		<td style="width: 148px">
+		<input id="shareSecret1" name="Text11" type="text" style="width: 300px"/></td>
+	</tr>
+	<tr>
+		<td style="width: 435px;">
+		<form method="post">
+			<input name="Generate1" type="button" value="Generate" onclick="genAcctResAuth();" /></form>
+		</td>
+		<td style="width: 148px;" >
+		<form method="post">
+			<input id="acctRespAuth" name="Text12" style="width: 300px" type="text" disabled="disabled" /></form>
+		</td>
+	</tr>
+</table>
+</center>
+</body>
+
+</html>
+
